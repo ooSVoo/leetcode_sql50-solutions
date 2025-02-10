@@ -162,7 +162,7 @@ GROUP BY query_name ;
 
 _______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
-20. Problem - Monthly Transactions 1 
+20. Problem - Monthly Transactions 1 (1193)
 
 Solution - 
 SELECT month, country, COUNT(*) as trans_count,  SUM(Sate = 'approved') as approved_count,
@@ -174,7 +174,54 @@ GROUP BY Country, Month ;
 
 _______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
-21. Problem -  
+21. Problem -  Immediate Food Delivery II (1174)
+
+Solution - 
+WITH cte
+    AS ( SELECT customer_id, order_date, MIN(order_date)
+    OVER (PARTITION BY customer_id) AS min_date, customer_pref_delivery_date FROM delivery)
+SELECT ROUND(( SUM(CASE
+                    WHEN order_Date = customer_pref_delivery_date AND customer_pref_delivery_date = min_date THEN 1
+                    ELSE 0
+                  END) / COUNT( DISTINCT customer_id ) * 100,2) AS immediate_percentage
+FROM cte
+_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+22. Problem - Game Play Analysis IV (550)
+
+Solution - 
+SELECT ROUND(COUNT(DISTINCT player_id) / SELECT COUNT(DISTINCT player_id) FROM Activity), 2) AS fraction FROM Activity
+WHERE (player_id, DATE_SUB(event_date, INTERVAL 1 DAY) IN ( SELECT player_id, MIN(event_date) AS first_login FROM Activity GROUP BY player_id )
+_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+23. Problem - Number of Unique Subjects taught by Each Teacher (2356)
+
+Solution - 
+SELECT teacher_id , COUNT(DISTINCT subject_id) AS cnt FROm Teacher
+GROUP BY teacher_id
+_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+24. Problem - User Activity for the Past 30 Days I (1141)
+Solution -
+SELECT activity_date as day, COUNT(DISTINCT user_id) as active_users FROM Activity
+WHERE datediff('2019-07-27',activity_date) < 30 AND activity_date <= '2019-07-27'
+GROUP BY activity_date
+
+ _______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+25. Problem -  Product Sales Analysis III (1070)
+Solution - 
+SELECT product_id, year as First_year, quantity, price from SALES
+WHERE (product_id, year) IN (SELECT product_id, MIN(YEAR) FROM SALES GROUP BY product_id )
+
+_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+26. Problem - Classes More than 5 Students (596)
+Solution - 
+SELECT class FROM Courses
+GROUP BY 1 HAVING count(*) >= 5
+
+_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 
 
